@@ -70,5 +70,31 @@ namespace StroitelstvoYaroMol.ClassFolder
                 sqlConnection.Close();
             }
         }
+        public void LoadCBJK(ComboBox comboBox)
+        {
+            try
+            {
+                sqlConnection.Open();
+                sqlDataAdapter = new SqlDataAdapter("Select IdJK, Name " +
+                    "From dbo.[JK] Order by Id ASC",
+                    sqlConnection);
+                dataSet = new DataSet();
+                sqlDataAdapter.Fill(dataSet, "[JK]");
+                comboBox.ItemsSource = dataSet
+                    .Tables["[JK]"].DefaultView;
+                comboBox.DisplayMemberPath = dataSet
+                    .Tables["[JK]"].Columns["Name"].ToString();
+                comboBox.SelectedValuePath = dataSet
+                    .Tables["[JK]"].Columns["IdJK"].ToString();
+            }
+            catch (Exception ex)
+            {
+                MBClass.ErrorMB(ex);
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
     }
 }

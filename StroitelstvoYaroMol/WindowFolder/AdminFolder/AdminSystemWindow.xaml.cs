@@ -41,13 +41,40 @@ namespace StroitelstvoYaroMol.WindowFolder.AdminFolder
 
         private void AddUser_Click(object sender, RoutedEventArgs e)
         {
-            new AdminFolder.AddAdminWindow().ShowDialog(); 
-
+            new AdminFolder.AddAdminWindow().ShowDialog();
+            dGClass.LoadDG("Select * From dbo.[UserView]");
         }
 
         private void EditUser_Click(object sender, RoutedEventArgs e)
         {
             new AdminFolder.EditAdminWindow().ShowDialog();
+            dGClass.LoadDG("Select * From dbo.[UserView]");
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UserDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (UserDG.SelectedItem == null)
+            {
+                MBClass.ErrorMB("Вы не выбрали строку");
+            }
+            else
+            {
+                try
+                {
+                    VariableClass.UserId = dGClass.SelectId();
+                    new EditAdminWindow().ShowDialog();
+                    dGClass.LoadDG("Select * From dbo.[UserView]");
+                }
+                catch (Exception ex)
+                {
+                    MBClass.ErrorMB(ex);
+                }
+            }
         }
     }
 }

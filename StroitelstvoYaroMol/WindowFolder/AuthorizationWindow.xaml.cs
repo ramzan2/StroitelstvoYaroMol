@@ -71,6 +71,9 @@ namespace StroitelstvoYaroMol.WindowFolder
                             case "2":
                                 MBClass.InformationMB("Менеджер");
                                 break;
+                            case "3":
+                                new StaffFolder.MenuStaffWindow().ShowDialog();
+                                break;
                         }
                     }
                 }

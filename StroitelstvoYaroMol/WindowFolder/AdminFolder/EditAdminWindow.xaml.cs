@@ -66,7 +66,7 @@ namespace StroitelstvoYaroMol.WindowFolder.AdminFolder
             {
                 sqlConnection.Open();
                 SqlCommand = new SqlCommand("Update " +
-                    " dbo.[user] " +
+                    "dbo.[user] " +
                     $"Set [Login]  ='{LoginTb.Text}', " +
                     $"[Password] ='{PasswordTb.Text}', " +
                     $"IdRole = '{RoleCb.SelectedValue.ToString()}' " +

@@ -21,22 +21,18 @@ namespace StroitelstvoYaroMol.WindowFolder.AdminFolder
     /// </summary>
     public partial class AddAdminWindow : Window
     {
+        CBClass cB;
         SqlConnection sqlConnection =
           new SqlConnection(@"Data Source=DESKTOP-C30H7UE\SQLEXPRESS;
                    Initial Catalog=user1;
                                 Integrated Security=True");
         SqlCommand sqlCommand;
-        CBClass cBClass;
         public AddAdminWindow()
         {
             InitializeComponent();
-            cBClass = new CBClass();
+            cB = new CBClass();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            cBClass.LoadCBRole(RoleCb);
-        }
 
         private void BackBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -45,29 +41,51 @@ namespace StroitelstvoYaroMol.WindowFolder.AdminFolder
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (RoleCb.SelectedIndex < 0)
+
+
+            if (string.IsNullOrWhiteSpace(LoginTb.Text))
+            {
+                MBClass.ErrorMB("Не введен логин");
+                LoginTb.Focus();
+            }
+            else if (string.IsNullOrWhiteSpace(PasswordTb.Text))
+            {
+                MBClass.ErrorMB("Не введен пароль");
+                PasswordTb.Focus();
+            }
+            else if (RoleCb.SelectedIndex < 0)
             {
                 MBClass.ErrorMB("Выберите роль");
+                RoleCb.Focus();
+            }
+            else
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    sqlCommand = new SqlCommand("Insert Into " +
+                        "dbo.[user] (Login, Password, IdRole) " +
+                        $"Values ('{LoginTb.Text}', " +
+                        $"'{PasswordTb.Text}'," +
+                        $"'{RoleCb.SelectedValue.ToString()}')", 
+                        sqlConnection);
+                    sqlCommand.ExecuteNonQuery();
+                    MBClass.InformationMB("Успех!");
+                }
+                catch (Exception ex)
+                {
+                    MBClass.ErrorMB(ex);
+                }
+                finally
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
 
-            }
-            try
-            {
-                sqlConnection.Open();
-                sqlCommand = new SqlCommand("Insert Into " +
-                    "ddbo.[user] (Login, Password, IdRole) " +
-                    $"Values ({LoginTb.Text},{PasswordTb.Text}, " +
-                    $"{RoleCb.SelectedValue.ToString()})", sqlConnection);
-                sqlCommand.ExecuteNonQuery();
-                MBClass.InformationMB("Успех!");
-            }
-            catch (Exception ex)
-            {
-                MBClass.ErrorMB(ex);
-            }
-            finally
-            {
-                sqlConnection.Close();
-            }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            cB.LoadCBRole(RoleCb);
         }
     }
 }
